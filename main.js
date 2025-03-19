@@ -61,10 +61,10 @@ function startGame() {
     }
 
     if (mineCount === 1) multiplier = 1.1;
-    else if (mineCount === 2) multiplier = 1.3;
-    else if (mineCount === 3) multiplier = 1.5;
-    else if (mineCount === 4) multiplier = 1.7;
-    else multiplier = 2;
+    else if (mineCount === 2) multiplier = 1.2;
+    else if (mineCount === 3) multiplier = 1.3;
+    else if (mineCount === 4) multiplier = 1.4;
+    else multiplier = 1.5;
 
     balance -= betAmount;
     balanceDisplay.value = balance;
