@@ -23,7 +23,8 @@ body {
     border-radius: 12px;
     box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
     text-align: center;
-    width: 480px;
+    width: 500px; /* Slightly wider */
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 /* Title */
@@ -32,83 +33,141 @@ body {
     font-weight: bold;
     margin-bottom: 20px;
     color: #ffffff;
+    animation: slideIn 0.6s ease-in-out;
 }
 
-/* Display Balance */
+/* Enhanced Balance Display - Bigger & More Structured */
 #display {
-    background: #262626;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-#display h3 {
-    font-size: 20px;
-    margin-bottom: 5px;
-    color: #b3b3b3;
-}
-
-#display input {
+    background: linear-gradient(135deg, #222, #333);
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    border: 3px solid #555;
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.6s ease-in-out;
     width: 100%;
-    padding: 15px;
+}
+
+/* Balance Label - Bigger & Highlighted */
+#balance-label {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffcc00; /* Gold for highlight */
+    text-shadow: 0px 0px 12px rgba(255, 204, 0, 0.9);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Balance Amount - Large & Glowing */
+#balance-amount {
+    font-size: 32px;
+    font-weight: bold;
+    padding: 12px 20px;
     text-align: center;
-    font-size: 22px;
-    font-weight: bold;
     background: #333;
-    border: none;
+    border: 3px solid #777;
     color: #ffffff;
-    border-radius: 8px;
+    border-radius: 12px;
+    width: 160px;
+    box-shadow: 0px 0px 20px rgba(255, 204, 0, 0.5);
+    transition: transform 0.2s ease-in-out;
 }
 
-/* Game Message */
-#message {
-    font-size: 18px;
-    font-weight: bold;
-    padding: 12px;
-    background: #222;
+#balance-amount:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 30px rgba(255, 204, 0, 0.9);
+}
+
+/* Balance Container Layout */
+#balance-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Coin Icon - Animated Glow */
+#balance-icon {
+    font-size: 32px;
     color: #ffcc00;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    animation: glow 1s infinite alternate;
 }
 
-/* Mine Grid */
+/* Animations */
+@keyframes glow {
+    from {
+        text-shadow: 0px 0px 8px rgba(255, 204, 0, 0.5);
+    }
+    to {
+        text-shadow: 0px 0px 18px rgba(255, 204, 0, 1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Mine Grid (Fixed Alignment) */
 #mine-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-    margin: 20px 0;
+    gap: 10px;
+    width: 100%; /* Ensures it fits within the container */
+    max-width: 400px; /* Restricts width to prevent overflow */
+    margin: auto;
+    justify-content: center;
+    animation: popIn 0.5s ease-in-out;
 }
 
+/* Mine Buttons */
 .mine-btn {
     background: #222;
     border: none;
     border-radius: 10px;
-    width: 85px;
-    height: 85px;
+    width: 70px; /* Adjusted for responsiveness */
+    height: 70px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.05);
+    animation: popIn 0.5s ease-in-out;
 }
 
+/* Mine Button Images */
 .mine-btn img {
-    width: 50px;
+    width: 40px;
     opacity: 0.7;
-    transition: opacity 0.2s ease-in-out;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
+/* Hover & Click Effects */
 .mine-btn:hover {
-    transform: scale(1.08);
+    transform: scale(1.1);
     background: #333;
 }
 
 .mine-btn:active {
     background: #444;
+    transform: scale(0.95);
 }
 
 .mine-btn:hover img {
     opacity: 1;
+    transform: scale(1.1);
 }
 
 /* Controls */
@@ -120,6 +179,7 @@ body {
     margin-top: 20px;
 }
 
+/* Bet Amount Input */
 #bet-amount {
     width: 90%;
     padding: 14px;
@@ -132,34 +192,6 @@ body {
     outline: none;
 }
 
-/* Multiplier Buttons */
-#multiplier-container {
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-    width: 100%;
-}
-
-.multiplier-btn {
-    background: #444;
-    border: none;
-    padding: 12px 20px;
-    font-size: 20px;
-    font-weight: bold;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.multiplier-btn:hover {
-    background: #666;
-}
-
-.multiplier-btn:active {
-    background: #777;
-}
-
 /* Buttons */
 button {
     font-size: 20px;
@@ -168,36 +200,52 @@ button {
     border-radius: 8px;
     cursor: pointer;
     border: none;
-    transition: 0.3s;
+    transition: 0.3s ease-in-out;
+    opacity: 1;
 }
 
+/* Start Game Button */
 #bet-btn {
     width: 90%;
     background: #055323;
     color: white;
+    transition: all 0.3s ease-in-out;
 }
 
 #bet-btn:hover {
     background: #136220;
+    transform: scale(1.05);
 }
 
 #bet-btn:active {
     background: #0d461a;
+    transform: scale(0.95);
 }
 
+/* Cashout Button */
 #cash-out-btn {
     width: 90%;
     background: #b80d0d;
     color: white;
     margin-top: 10px;
+    opacity: 0.6;
+    cursor: not-allowed;
+    transition: all 0.3s ease-in-out;
 }
 
-#cash-out-btn:hover {
+#cash-out-btn.enabled {
+    opacity: 1;
+    cursor: pointer;
+}
+
+#cash-out-btn:hover:enabled {
     background: #990b0b;
+    transform: scale(1.05);
 }
 
-#cash-out-btn:active {
+#cash-out-btn:active:enabled {
     background: #7a0808;
+    transform: scale(0.95);
 }
 
 /* Mine Selector */
@@ -223,11 +271,45 @@ button {
 
 /* Footer */
 footer {
-
     width: 100%;
     background: #111;
     text-align: center;
     padding: 14px;
     font-size: 16px;
     color: #b3b3b3;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* 🔥 Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
