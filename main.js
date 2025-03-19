@@ -10,18 +10,30 @@ let clickCount = 0;
 const mineImage = "https://i.pinimg.com/736x/bc/12/c3/bc12c33f7d6821e6d27d0f88eae70855.jpg";
 const gemImage = "https://i.pinimg.com/736x/eb/7e/77/eb7e772fd6451448d45233d08133e161.jpg";
 
-
 const balanceDisplay = document.getElementById("balance");
 const betAmountInput = document.getElementById("bet-amount");
 const betButton = document.getElementById("bet-btn");
 const cashoutButton = document.getElementById("cash-out-btn");
 const mineGrid = document.getElementById("mine-grid");
 const mineSelector = document.getElementById("mine");
-const multiplierSelector = document.getElementById("multiplier");
 const messageBox = document.getElementById("message-box");
 
 betButton.addEventListener("click", startGame);
 cashoutButton.addEventListener("click", cashOut);
+betAmountInput.addEventListener("input", validateBetAmount);
+
+function validateBetAmount() {
+    let betAmount = parseFloat(betAmountInput.value);
+    if (isNaN(betAmount) || betAmount <= 0 || betAmount > balance) {
+        betButton.disabled = true;
+        betButton.style.opacity = "0.6";
+        betButton.style.cursor = "not-allowed";
+    } else {
+        betButton.disabled = false;
+        betButton.style.opacity = "1";
+        betButton.style.cursor = "pointer";
+    }
+}
 
 function createMineGrid() {
     mineGrid.innerHTML = "";
@@ -31,7 +43,7 @@ function createMineGrid() {
         btn.dataset.index = i;
 
         let img = document.createElement("img");
-        img.classList.add("hidden"); 
+        img.classList.add("hidden");
         btn.appendChild(img);
 
         btn.addEventListener("click", () => revealMine(btn));
@@ -40,14 +52,19 @@ function createMineGrid() {
 }
 
 function startGame() {
-    let betAmount = Math.floor(parseFloat(betAmountInput.value)); 
+    let betAmount = Math.floor(parseFloat(betAmountInput.value));
     mineCount = parseInt(mineSelector.value);
-    multiplier = parseFloat(multiplierSelector.value); 
 
-    if (isNaN(betAmount) || betAmount <= 0 || betAmount > balance) {
-        messageBox.innerText = "Invalid bet!";
+    if (betAmount <= 0 || isNaN(betAmount)) {
+        messageBox.innerText = "Enter a valid bet amount!";
         return;
     }
+
+    if (mineCount === 1) multiplier = 1.1;
+    else if (mineCount === 2) multiplier = 1.3;
+    else if (mineCount === 3) multiplier = 1.5;
+    else if (mineCount === 4) multiplier = 1.7;
+    else multiplier = 2;
 
     balance -= betAmount;
     balanceDisplay.value = balance;
@@ -57,37 +74,36 @@ function startGame() {
     clickCount = 0;
     mines = [];
 
-    cashoutButton.disabled = false;
     betButton.disabled = true;
+    betButton.style.opacity = "0.6";
+    betButton.style.cursor = "not-allowed";
+
+    cashoutButton.disabled = true;
     messageBox.innerText = "Game started! Pick a tile.";
 
-
     generateMines();
-
     createMineGrid();
 }
 
 function generateMines() {
-    let maxClicksBeforeMine = 10; // Default max clicks before a mine appears
+    let maxClicksBeforeMine = 10;
 
     if (currentBet >= balance) {
-        maxClicksBeforeMine = Math.floor(Math.random() * 2) + 2; // Mines will appear within 2-3 clicks
+        maxClicksBeforeMine = Math.floor(Math.random() * 2) + 1;
     } else if (mineCount > 5) {
-        maxClicksBeforeMine = Math.floor(Math.random() * 3) + 3; // Mines appear in 3-5 clicks if more mines exist
+        maxClicksBeforeMine = Math.floor(Math.random() * 3) + 2;
     } else {
-        maxClicksBeforeMine = Math.floor(Math.random() * 5) + 5; // Mines appear in 5-10 clicks normally
+        maxClicksBeforeMine = Math.floor(Math.random() * 4) + 3;
     }
 
-    // Generate mines but keep the first few safe clicks
     while (mines.length < mineCount) {
-        let randomIndex = Math.floor(Math.random() * 25);
+        let randomIndex = Math.floor(Math.random() * 11);
         if (!mines.includes(randomIndex) && randomIndex > maxClicksBeforeMine) {
             mines.push(randomIndex);
         }
     }
 }
 
-// Reveal mine or gem
 function revealMine(button) {
     if (!gameActive || button.classList.contains("clicked")) return;
 
@@ -96,32 +112,30 @@ function revealMine(button) {
     clickCount++;
 
     if (mines.includes(index)) {
-        // Found a mine
         button.querySelector("img").src = mineImage;
         button.querySelector("img").classList.remove("hidden");
         button.classList.add("mine-lost");
-
         gameOver(false);
-
     } else {
-        // Found a gem
         button.querySelector("img").src = gemImage;
         button.querySelector("img").classList.remove("hidden");
         button.classList.add("gem-won");
 
-        // Increase winnings based on multiplier
+        if (clickCount === 1) {
+            cashoutButton.disabled = false;
+            cashoutButton.style.opacity = "1";
+            cashoutButton.style.cursor = "pointer";
+        }
+
         winnings = Math.floor(winnings * multiplier);
         messageBox.innerText = `You found a gem! Current winnings: ${winnings}`;
 
-
-        // Check if mines should appear sooner based on click count
         if (clickCount >= 2 && currentBet >= balance) {
-            mines.push(Math.floor(Math.random() * 25)); // Force a mine soon
+            mines.push(Math.floor(Math.random() * 25));
         }
     }
 }
 
-// Cashout winnings
 function cashOut() {
     if (!gameActive) return;
 
@@ -129,16 +143,19 @@ function cashOut() {
     balanceDisplay.value = balance;
     messageBox.innerText = `You cashed out ${winnings}!`;
 
-
-
     resetGame();
 }
 
-// Game over logic
 function gameOver(win) {
     gameActive = false;
+
     betButton.disabled = false;
+    betButton.style.opacity = "1";
+    betButton.style.cursor = "pointer";
+
     cashoutButton.disabled = true;
+    cashoutButton.style.opacity = "0.6";
+    cashoutButton.style.cursor = "not-allowed";
 
     if (!win) {
         messageBox.innerText = "You hit a mine! Game over.";
@@ -147,13 +164,20 @@ function gameOver(win) {
     setTimeout(resetGame, 2000);
 }
 
-// Reset game
 function resetGame() {
     gameActive = false;
+
     betButton.disabled = false;
+    betButton.style.opacity = "1";
+    betButton.style.cursor = "pointer";
+
     cashoutButton.disabled = true;
+    cashoutButton.style.opacity = "0.6";
+    cashoutButton.style.cursor = "not-allowed";
+
     createMineGrid();
+    validateBetAmount();
 }
 
-// Initialize game
 createMineGrid();
+validateBetAmount();
