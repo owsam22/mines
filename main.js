@@ -7,6 +7,11 @@ let winnings = 0;
 let multiplier = 1;
 let clickCount = 0;
 
+const onMine=new Audio("onMine.mp3");
+const onTile=new Audio("onTile.mp3");
+const cashout=new Audio("cashout.mp3");
+const startmine=new Audio("startmine.mp3");
+
 const mineImage = "https://i.pinimg.com/736x/bc/12/c3/bc12c33f7d6821e6d27d0f88eae70855.jpg";
 const gemImage = "https://i.pinimg.com/736x/eb/7e/77/eb7e772fd6451448d45233d08133e161.jpg";
 
@@ -52,6 +57,7 @@ function createMineGrid() {
 }
 
 function startGame() {
+    startmine.play()
     let betAmount = Math.floor(parseFloat(betAmountInput.value));
     mineCount = parseInt(mineSelector.value);
 
@@ -115,11 +121,16 @@ function revealMine(button) {
         button.querySelector("img").src = mineImage;
         button.querySelector("img").classList.remove("hidden");
         button.classList.add("mine-lost");
+
         gameOver(false);
     } else {
+        onTile.play();
         button.querySelector("img").src = gemImage;
         button.querySelector("img").classList.remove("hidden");
         button.classList.add("gem-won");
+
+        
+
 
         if (clickCount === 1) {
             cashoutButton.disabled = false;
@@ -137,6 +148,7 @@ function revealMine(button) {
 }
 
 function cashOut() {
+    cashout.play();
     if (!gameActive) return;
 
     balance += winnings;
@@ -158,6 +170,7 @@ function gameOver(win) {
     cashoutButton.style.cursor = "not-allowed";
 
     if (!win) {
+        onMine.play()
         messageBox.innerText = "You hit a mine! Game over.";
     }
 
